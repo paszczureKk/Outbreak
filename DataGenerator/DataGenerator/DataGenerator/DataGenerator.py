@@ -16,9 +16,9 @@ def generate_data(world_size_x, world_size_y, agents_count, ilness_probability):
             existing_agents_cords.add(cords)
             rand_illness = random.random()
             if rand_illness < ilness_probability:
-                ilness=True
+                illness=True
             else:
-                ilness=False
+                illness=False
             rand_gender = random.random()
             if rand_gender < 0.5:
                 gender='F'
