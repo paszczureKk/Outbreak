@@ -24,12 +24,28 @@ def generate_data(world_size_x, world_size_y, agents_count, ilness_probability):
                 gender='F'
             else:
                 gender='M'
-            
+
+            rand_age=random.random()
+            if rand_age<0.02:
+                age=random.randint(1,5)
+            elif rand_age < 0.1:
+                age=random.randint(5, 15)
+            elif rand_age < 0.6:
+                age=random.randint(15, 30)
+            elif rand_age < 0.8:
+                age=random.randint(30, 50)
+            elif rand_age < 0.9:
+                age=random.randint(50, 70)
+            else:
+                age=random.randint(70, 100)
+
+
             data['agents'].append({
                 'x': str(x),
                 'y': str(y),
                 'illness': str(illness),
-                'gender': gender
+                'gender': gender,
+                'age':age
                 })
     data['illness']=[]
     fatality=float(random.randint(1, 10)/100)
