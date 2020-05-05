@@ -31,6 +31,13 @@ def generate_data(world_size_x, world_size_y, agents_count, ilness_probability):
                 'illness': str(illness),
                 'gender': gender
                 })
+    data['illness']=[]
+    fatality=float(random.randint(1, 10)/100)
+    infectiousness=float(random.randint(25, 80)/100)
+    data['illness'].append({
+        'fatality':str(fatality),
+        'infectiousness':str(infectiousness)
+        })
     return data
 
 if __name__ == "__main__":
