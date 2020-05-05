@@ -6,4 +6,5 @@ public class AgentVariables
     public int y;
     public bool illness;
     public char gender;
+    public int age;
 }

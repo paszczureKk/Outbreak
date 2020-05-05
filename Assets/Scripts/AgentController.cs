@@ -19,7 +19,7 @@ public class AgentController : MonoBehaviour
 
     private Gender gender = Gender.None;
     private bool illness = false;
-
+    private int age = 1;
     public AgentVariables AgentVariables
     {
         set
@@ -27,6 +27,7 @@ public class AgentController : MonoBehaviour
             amc.Velocity = new Vector2(value.x, value.y);
             gender = value.gender == 'M' ? Gender.Male : value.gender == 'F' ? Gender.Female : Gender.None;
             illness = value.illness;
+            age = value.age;
         }
     }
 }

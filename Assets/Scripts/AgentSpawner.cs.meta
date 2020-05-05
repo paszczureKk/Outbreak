@@ -3,7 +3,10 @@ guid: 3fa3e6b7ae586de4f9fd2029b4622c50
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - jsonFile: {instanceID: 0}
+  - agent_template: {instanceID: 0}
+  - agentRealm: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
