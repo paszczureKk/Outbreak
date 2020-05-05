@@ -20,11 +20,11 @@ public class AgentMovementController : MonoBehaviour
         if (movementController == null)
         {
             movementController = MovementController.Instance;
-            maxSpeedChange = movementController.MaxAcceleration * Time.deltaTime;
-            bounds = movementController.Bounds;
         }
 
-        this.Velocity = movementController.Velocity;
+        maxSpeedChange = movementController.MaxAcceleration * Time.deltaTime;
+        bounds = movementController.Bounds;
+        movementController.Velocity = velocity;
     }
 
     // Update is called once per frame
@@ -40,11 +40,17 @@ public class AgentMovementController : MonoBehaviour
         Vector3 newPosition = transform.localPosition + displacement;
 
         float OutrangeX = Mathf.Abs(newPosition.x) - bounds.x;
-        float OutrangeY = Mathf.Abs(newPosition.y) - bounds.y;
+        float OutrangeY = Mathf.Abs(newPosition.z) - bounds.y;
 
         if (OutrangeX >= 0.0f)
         {
             velocity.x = -velocity.x;
         }
+        if (OutrangeY >= 0.0f)
+        {
+            velocity.z = -velocity.z;
+        }
+
+        this.gameObject.transform.localPosition = newPosition;
     }
 }

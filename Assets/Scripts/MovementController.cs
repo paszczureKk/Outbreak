@@ -24,13 +24,13 @@ public class MovementController : MonoBehaviour
             return;
         }
 
-        plane = Instantiate(plane_template, Vector3.zero, Quaternion.identity);
+        plane = Instantiate(plane, Vector3.zero, Quaternion.identity);
         plane.transform.localScale = new Vector3(scale, 1, scale);
     }
 
     [SerializeField]
-    [Range(5, 50)]
-    private int tempo = 10;
+    [Range(1, 20)]
+    private int tempo = 1;
     private Vector2 m = Vector2.zero;
 
     private int scale = 10;
@@ -42,6 +42,7 @@ public class MovementController : MonoBehaviour
             if (scale < temp)
             {
                 scale = temp;
+                plane.transform.localScale = new Vector3(scale, 1, scale);
             }
         }
         get
@@ -63,7 +64,6 @@ public class MovementController : MonoBehaviour
     }
 
     [SerializeField]
-    private GameObject plane_template;
     private GameObject plane;
 
     [SerializeField]
@@ -94,7 +94,6 @@ public class MovementController : MonoBehaviour
                 this.Bounds = new Vector2(this.Bounds.x, value.y);
                 this.Scale = (int)value.y;
             }
-            velocities.Enqueue(value);
         }
         get
         {
