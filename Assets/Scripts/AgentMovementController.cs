@@ -29,7 +29,6 @@ public class AgentMovementController : MonoBehaviour
             movementController = MovementController.Instance;
             maxSpeedChange = movementController.MaxAcceleration * Time.deltaTime;
         }
-        movementController.Velocity = new Vector2(velocity.x, velocity.z);
         bounds = movementController.Bounds;
 
         rb = this.gameObject.GetComponent<Rigidbody>();

@@ -36,6 +36,7 @@ public class AgentController : MonoBehaviour
             amc.Velocity = new Vector2(0.0f, 0.0f);
             mGender = value.gender == "M" ? Gender.Male : value.gender == "F" ? Gender.Female : Gender.None;
             Illness = value.illness;
+            MovementController.Instance.Plane = new Vector2(value.x, value.y);
         }
         get
         {

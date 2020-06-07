@@ -32,23 +32,19 @@ public class MovementController : MonoBehaviour
         }
     }
 
-    [SerializeField]
-    [Range(1, 20)]
-    private int worldScale = 5;
     private Vector3 m = Vector3.zero;
 
     private const float planeRatio = 0.1f;
-    private const int worldUnitScale = 10;
 
-    private int scale = 10;
+    private int scale = 0;
     public int Scale
     {
         set
         {
-            int temp = value * worldScale;
-            if (scale < temp)
+            if (scale < value)
             {
-                scale = temp;
+                scale = value;
+                Debug.Log(scale);
                 float planeScale = scale * planeRatio;
                 plane.transform.localScale = new Vector3(planeScale, 1, planeScale);
                 this.Bounds = new Vector2(Scale / 2.0f, Scale / 2.0f);
@@ -64,7 +60,7 @@ public class MovementController : MonoBehaviour
     [SerializeField]
     private GameObject plane;
 
-    public Vector2 Velocity
+    public Vector2 Plane
     {
         set
         {
@@ -72,6 +68,7 @@ public class MovementController : MonoBehaviour
             if (this.m.z < max)
             {
                 this.m.z = max;
+                Debug.Log(max);
                 this.Scale = Mathf.CeilToInt(max);
             }
         }
