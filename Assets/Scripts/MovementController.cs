@@ -3,20 +3,13 @@ using System.Collections.Generic;
 
 public class MovementController : MonoBehaviour
 {
-    private static MovementController instance = null;
-    public static MovementController Instance
-    {
-        get
-        {
-            return instance;
-        }
-    }
+    public static MovementController Instance { get; set; }
     
     public void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
         }
         else
         {
@@ -29,46 +22,8 @@ public class MovementController : MonoBehaviour
     }
 
     [SerializeField]
-    [Range(1, 20)]
-    private int tempo = 1;
-    private Vector2 m = Vector2.zero;
-
-    private int scale = 10;
-    public int Scale
-    {
-        set
-        {
-            int temp = value * tempo;
-            if (scale < temp)
-            {
-                scale = temp;
-                plane.transform.localScale = new Vector3(scale, 1, scale);
-            }
-        }
-        get
-        {
-            return scale;
-        }
-    }
-    private Vector2 bounds;
-    public Vector2 Bounds
-    {
-        set
-        {
-            bounds = new Vector2(Scale - value.x, Scale - value.y);
-        }
-        get
-        {
-            return bounds;
-        }
-    }
-
-    [SerializeField]
-    private GameObject plane;
-
-    [SerializeField]
-    [Range(1.0f, 10.0f)]
-    private float maxAcceleration;
+    [Range(1, 10)]
+    private float maxAcceleration = 5.0f;
     public float MaxAcceleration
     {
         get
@@ -77,27 +32,48 @@ public class MovementController : MonoBehaviour
         }
     }
 
-    private Queue<Vector2> velocities;
-    public Vector2 Velocity
+    [SerializeField]
+    [Range(1, 20)]
+    private int worldScale = 5;
+    private Vector3 m = Vector3.zero;
+
+    private const float planeRatio = 0.1f;
+    private const int worldUnitScale = 10;
+
+    private int scale = 10;
+    public int Scale
     {
         set
         {
-            if (this.m.x < value.x)
+            int temp = value * worldScale;
+            if (scale < temp)
             {
-                this.m = new Vector2(value.x, m.y);
-                this.Bounds = new Vector2(value.x, this.Bounds.y);
-                this.Scale = (int)value.x;
-            }
-            if (this.m.y < value.y)
-            {
-                this.m = new Vector2(m.x, value.y);
-                this.Bounds = new Vector2(this.Bounds.x, value.y);
-                this.Scale = (int)value.y;
+                scale = temp;
+                float planeScale = scale * planeRatio;
+                plane.transform.localScale = new Vector3(planeScale, 1, planeScale);
+                this.Bounds = new Vector2(Scale / 2.0f, Scale / 2.0f);
             }
         }
         get
         {
-            return velocities.Dequeue();
+            return scale;
+        }
+    }
+    public Vector2 Bounds { set; get; }
+
+    [SerializeField]
+    private GameObject plane;
+
+    public Vector2 Velocity
+    {
+        set
+        {
+            float max = (value.x > value.y ? value.x : value.y);
+            if (this.m.z < max)
+            {
+                this.m.z = max;
+                this.Scale = Mathf.CeilToInt(max);
+            }
         }
     }
 }

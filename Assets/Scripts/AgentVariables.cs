@@ -2,8 +2,8 @@
 [System.Serializable]
 public class AgentVariables
 {
-    public int x;
-    public int y;
+    public float x;
+    public float y;
     public bool illness;
-    public char gender;
+    public string gender;
 }
