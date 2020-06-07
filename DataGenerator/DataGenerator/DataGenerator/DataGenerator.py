@@ -8,6 +8,8 @@ def generate_data(world_size_x, world_size_y, agents_count, ilness_probability):
     existing_agents_cords=set()
     illness=False
     gender='M'
+    vx=0.0
+    vy=0.0
     while len(existing_agents_cords) < agents_count:
         x = random.randint(0, world_size_x-1)
         y = random.randint(0, world_size_y-1)
@@ -15,6 +17,8 @@ def generate_data(world_size_x, world_size_y, agents_count, ilness_probability):
         if cords not in existing_agents_cords:
             existing_agents_cords.add(cords)
             rand_illness = random.random()
+            vx = random.randint(0, int(world_size_x-1/2))-world_size_x/4
+            vy = random.randint(0, int(world_size_y-1/2))-world_size_y/4
             if rand_illness < ilness_probability:
                 illness=True
             else:
@@ -43,6 +47,8 @@ def generate_data(world_size_x, world_size_y, agents_count, ilness_probability):
             data['agents'].append({
                 'x': str(x),
                 'y': str(y),
+                'vx': str(vx),
+                'vy': str(vy),
                 'illness': str(illness),
                 'gender': gender,
                 'age':age
