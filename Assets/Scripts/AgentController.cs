@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class AgentController : MonoBehaviour
 {
+    private static IllnessController ic;
     public enum Gender
     {
         Male,
@@ -20,6 +21,10 @@ public class AgentController : MonoBehaviour
         mGender = Gender.None;
         Illness = false;
     }
+    public void Start()
+    {
+        ic = IllnessController.Instance;
+    }
 
     public Gender mGender { set; get; }
     public bool Illness { set; get; }
@@ -28,17 +33,18 @@ public class AgentController : MonoBehaviour
     {
         set
         {
-            amc.Velocity = new Vector2(value.x, value.y);
+            amc.Velocity = new Vector2(0.0f, 0.0f);
             mGender = value.gender == "M" ? Gender.Male : value.gender == "F" ? Gender.Female : Gender.None;
             Illness = value.illness;
         }
         get
         {
             AgentVariables av = new AgentVariables();
-            av.x = amc.Velocity.x;
-            av.y = amc.Velocity.y;
+            av.x = transform.position.x;
+            av.y = transform.position.z;
             av.gender = mGender == Gender.Male ? "M" : mGender == Gender.Female ? "F" : "N";
             av.illness = Illness;
+            av.age = agc.Age;
 
             return av;
         }
@@ -51,10 +57,14 @@ public class AgentController : MonoBehaviour
         {
             return;
         }
+        if(ic == null)
+        {
+            return;
+        }
 
         if(this.Illness || other.Illness)
         {
-            if (UnityEngine.Random.value < IllnessController.Infectiousness)
+            if (UnityEngine.Random.value < ic.Infectiousness)
             {
                 this.Illness = other.Illness = true;
             }

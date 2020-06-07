@@ -52,11 +52,16 @@ public class WorldController : MonoBehaviour
             }
 
             timeframe = 0;
+            Debug.Log(agents.Count);
         }
     }
 
     public void KeepTrack(AgentController agent)
     {
         agents.Add(agent);
+    }
+    public void DropTrack(AgentController agent)
+    {
+        agents.Remove(agent);
     }
 }

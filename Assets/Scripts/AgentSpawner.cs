@@ -17,6 +17,7 @@ public class AgentSpawner : MonoBehaviour
     private List<GameObject> agents;
 
     private WorldController wc;
+    private IllnessController ic;
 
     // Start is called before the first frame update
     public void Awake()
@@ -38,22 +39,22 @@ public class AgentSpawner : MonoBehaviour
     public void Start()
     {
         wc = WorldController.Instance;
+        ic = IllnessController.Instance;
 
         AgentsWrapper agentVariables = JsonUtility.FromJson<AgentsWrapper>(jsonFile.text);
+        ic.Infectiousness = (float)agentVariables.Infectiousness;
+        ic.Fatality = (float)agentVariables.Fatality;
+
         foreach (AgentVariables variables in agentVariables.agents)
         {
-            Spawn(agentRealm.transform, variables);
+            Spawn(variables);
         }
     }
 
-    public void Spawn(Transform transform, AgentVariables av)
+    public void Spawn(AgentVariables av)
     {
-        GameObject agent = Instantiate<GameObject>(agent_template, transform);
+        GameObject agent = Instantiate<GameObject>(agent_template, new Vector3(av.x, agent_template.transform.position.y, av.y), Quaternion.identity, agentRealm.transform);
         AgentController ac = agent.GetComponent<AgentController>();
-        if(ac == null)
-        {
-            Debug.Log("blah");
-        }
         ac.AgentVariables = av;
         agents.Add(agent);
 

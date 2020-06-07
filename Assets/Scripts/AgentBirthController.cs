@@ -3,18 +3,20 @@
 public class AgentBirthController : MonoBehaviour
 {
     private static AgentSpawner agentSpawner;
+    private static IllnessController ic;
+    private static WorldController wc;
     private AgentController ac;
 
     private static int birthCooldown = 1;
     private int lastBirth = 0;
     private int timeFrame = 0;
-    private int Age { get; set; }
+    public int Age { get; set; }
 
     private float DeathProbability
     {
         get
         {
-            return Age * 0.005f + 0.02f + (ac.Illness == true ? IllnessController.Fatality : 0.0f);
+            return Age * 0.005f + 0.02f + (ac.Illness == true ? ic.Fatality : 0.0f);
         }
     }
 
@@ -25,7 +27,18 @@ public class AgentBirthController : MonoBehaviour
 
     public void Start()
     {
-        agentSpawner = AgentSpawner.Instance;
+        if (agentSpawner == null)
+        {
+            agentSpawner = AgentSpawner.Instance;
+        }
+        if(ic == null)
+        {
+            ic = IllnessController.Instance;
+        }
+        if(wc == null)
+        {
+            wc = WorldController.Instance;
+        }
         ac = this.gameObject.GetComponent<AgentController>();
     }
 
@@ -43,6 +56,7 @@ public class AgentBirthController : MonoBehaviour
 
             if (UnityEngine.Random.value < DeathProbability)
             {
+                wc.DropTrack(ac);
                 Destroy(gameObject);
             }
         }
@@ -80,9 +94,9 @@ public class AgentBirthController : MonoBehaviour
             av.x = (ac.AgentVariables.x + otherVariables.x) / 2.0f;
             av.y = (ac.AgentVariables.y + otherVariables.y) / 2.0f;
             av.gender = UnityEngine.Random.value < 0.5f ? "M" : "F";
-            av.illness = (UnityEngine.Random.value < IllnessController.Infectiousness ? true : false);
+            av.illness = (UnityEngine.Random.value < ic.Infectiousness ? true : false);
 
-            agentSpawner.Spawn(this.gameObject.transform, av);
+            agentSpawner.Spawn(av);
 
             lastBirth += birthCooldown;
         }

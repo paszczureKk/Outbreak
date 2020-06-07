@@ -5,8 +5,8 @@ using UnityEngine;
 public class IllnessController : MonoBehaviour
 {
     public static IllnessController Instance { get; set; }
-    public static float Infectiousness { get; set; }
-    public static float Fatality { get; set; }
+    public float Infectiousness { get; set; }
+    public float Fatality { get; set; }
 
     public void Awake()
     {
