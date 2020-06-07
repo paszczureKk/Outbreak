@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Analytics;
+﻿using UnityEngine;
 
 public class AgentBirthController : MonoBehaviour
 {
@@ -38,12 +35,15 @@ public class AgentBirthController : MonoBehaviour
         if(++timeFrame == WorldController.WorldTick)
         {
             Age++;
-            lastBirth--;
+            
+            if(lastBirth > 0)
+            {
+                lastBirth--;
+            }
 
             if (UnityEngine.Random.value < DeathProbability)
             {
                 Destroy(gameObject);
-                Debug.Log("BLAH!");
             }
         }
     }
