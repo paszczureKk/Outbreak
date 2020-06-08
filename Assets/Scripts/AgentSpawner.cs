@@ -16,7 +16,7 @@ public class AgentSpawner : MonoBehaviour
 
     [SerializeField]
     [Range(0, 100)]
-    private int population;
+    private int population = 30;
 
     private List<GameObject> agents;
 
@@ -47,14 +47,28 @@ public class AgentSpawner : MonoBehaviour
 
         for (int i = 0; i < population; i++)
         {
-            Spawn();
+            Spawn(Vector3.zero);
         }
     }
 
-    public void Spawn()
+    public AgentController Spawn(Vector3 pos, City city = null)
     {
-        AgentController ac = agent.GetComponent<AgentController>();
-        agents.Add(agent);
-        wc.KeepTrack(ac);
+        if(city == null)
+        {
+            city = wc.Town;
+        }
+
+        GameObject go = Instantiate(agent_template, pos, Quaternion.identity , city.gameObject.transform);
+        AgentController ac = go.transform.GetComponent<AgentController>();
+        ac.City = city;
+
+        city.KeepTrack(ac);
+
+        if(pos == Vector3.zero)
+        {
+            go.transform.position = ac.City.RandomPos;
+        }
+
+        return ac;
     }
 }

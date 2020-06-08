@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 
 public class MovementController : MonoBehaviour
 {
@@ -46,7 +45,6 @@ public class MovementController : MonoBehaviour
             if (scale < value)
             {
                 scale = value;
-                Debug.Log(scale);
                 float planeScale = scale * planeRatio;
                 plane.transform.localScale = new Vector3(planeScale, 1, planeScale);
                 this.Bounds = new Vector2(Scale / 2.0f, Scale / 2.0f);

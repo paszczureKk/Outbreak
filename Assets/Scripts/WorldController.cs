@@ -47,12 +47,16 @@ public class WorldController : MonoBehaviour
         }
     }
 
+    public City TownTravel(City city)
+    {
+        var temp = cities.Where(e => e.Access == true && !e.Equals(city)).ToList();
+        return (temp.Count == 0 ? null : temp[UnityEngine.Random.Range(0, temp.Count)]);
+    }
     public City Town
     {
         get
         {
-            var temp = cities.Where(e => e.Access == true).ToList();
-            return (temp.Count == 0 ? null : temp[UnityEngine.Random.Range(0, temp.Count)]);
+            return cities[UnityEngine.Random.Range(0, cities.Count)];
         }
     }
 

@@ -1,19 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Numerics;
+using UnityEngine;
 
-public class City
+public class City : MonoBehaviour
 {
     public float Range { set; get; }
     public Vector2 Coords { set; get; }
+
+    private static MovementController mc;
 
     private List<AgentController> agents;
 
     public bool Access { get; set; }
 
-    public City()
+    public void Awake()
     {
-        Range = UnityEngine.Random.Range(1, Math.Min(MovementController.Instance.Bounds.x, MovementController.Instance.Bounds.y));
+        if(mc == null)
+        {
+            mc = MovementController.Instance;
+        }
+        Range = UnityEngine.Random.Range(1, Math.Min(mc.Bounds.x, mc.Bounds.y));
     }
     public City(float x, float y)
     {
@@ -36,5 +42,25 @@ public class City
     public void DropTrack(AgentController agent)
     {
         agents.Remove(agent);
+    }
+
+    public Vector3 RandomPos
+    {
+        get
+        {
+            Vector2 random = UnityEngine.Random.insideUnitCircle * Range;
+            random += Coords;
+
+            if (Mathf.Abs(random.x) > mc.Bounds.x)
+            {
+                random.x = (random.x < 0 ? -mc.Bounds.x : mc.Bounds.x);
+            }
+            if (Mathf.Abs(random.y) > mc.Bounds.y)
+            {
+                random.y = (random.y < 0 ? -mc.Bounds.y : mc.Bounds.y);
+            }
+
+            return new Vector3(random.x, mc.YOffset, random.y);
+        }
     }
 }
