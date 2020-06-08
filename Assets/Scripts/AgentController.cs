@@ -18,8 +18,10 @@ public class AgentController : MonoBehaviour
     {
         amc = this.gameObject.GetComponent<AgentMovementController>();
         agc = this.gameObject.GetComponent<AgentBirthController>();
-        mGender = Gender.None;
-        Illness = false;
+
+        setRandomAge();
+        setRandomGender();
+        setRandomIllnessState();
     }
     public void Start()
     {
@@ -28,6 +30,8 @@ public class AgentController : MonoBehaviour
 
     public Gender mGender { set; get; }
     public bool Illness { set; get; }
+
+    public int Age { set; get; }
 
     public void OnCollisionEnter(Collision collision)
     {
@@ -70,5 +74,59 @@ public class AgentController : MonoBehaviour
     {
         amc.enabled = true;
         agc.enabled = true;
+    }
+
+    private void setRandomAge()
+    {
+        float rand_age = UnityEngine.Random.value;
+        if (rand_age < 0.02f)
+        {
+            Age = UnityEngine.Random.Range(1, 5);
+        }
+        else if (rand_age < 0.1f)
+        {
+            Age = UnityEngine.Random.Range(5, 15);
+        }
+        else if (rand_age < 0.6f)
+        {
+            Age = UnityEngine.Random.Range(15, 30);
+        }
+        else if (rand_age < 0.8f)
+        {
+            Age = UnityEngine.Random.Range(30, 50);
+        }
+        else if (rand_age < 0.9f)
+        {
+            Age = UnityEngine.Random.Range(50, 70);
+        }
+        else
+        {
+            Age = UnityEngine.Random.Range(70, 100);
+        }
+    }
+    private void setRandomGender()
+    {
+        float rand_gender = UnityEngine.Random.value;
+        if (rand_gender > 0.5)
+        {
+            mGender = Gender.Male;
+        }
+        else
+        {
+            mGender = Gender.Female;
+        }
+    }
+
+    private void setRandomIllnessState()
+    {
+        float rand_illness = UnityEngine.Random.value;
+        if (rand_illness < ic.InitialIllnessProbability)
+        {
+            Illness = true;
+        }
+        else
+        {
+            Illness = false;
+        }
     }
 }
