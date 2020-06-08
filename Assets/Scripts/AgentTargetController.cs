@@ -30,18 +30,7 @@ public class AgentTargetController : MonoBehaviour
     }
     private Vector3 PickTarget()
     {
-        Vector2 random = UnityEngine.Random.insideUnitCircle * ac.City.Range;
-
-        if (Mathf.Abs(random.x) > bounds.x)
-        {
-            random.x = (random.x < 0 ? -bounds.x : bounds.x);
-        }
-        if (Mathf.Abs(random.y) > bounds.y)
-        {
-            random.y = (random.y < 0 ? -bounds.y : bounds.y);
-        }
-
-        return new Vector3(random.x, yOffset, random.y);
+        return ac.City.RandomPos;
     }
 
     public void Work()

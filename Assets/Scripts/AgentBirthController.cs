@@ -8,7 +8,7 @@ public class AgentBirthController : MonoBehaviour
     private AgentController ac;
 
     private static int birthCooldown = 1;
-    private int lastBirth = 0;
+    private int pregnancy = 0;
     public int Age { get; set; }
 
     private float DeathProbability
@@ -41,14 +41,14 @@ public class AgentBirthController : MonoBehaviour
         ac = this.gameObject.GetComponent<AgentController>();
     }
 
-    // Update is called once per frame
     public void Tick()
     {
         Age++;
             
-        if(lastBirth > 0)
+        if(pregnancy > 0)
         {
-            lastBirth--;
+            pregnancy--;
+            Birth();
         }
 
         if (UnityEngine.Random.value < DeathProbability)
@@ -58,7 +58,14 @@ public class AgentBirthController : MonoBehaviour
         }
     }
 
-    public void Birth(AgentController other)
+    private void Birth()
+    {
+        AgentController ac = agentSpawner.Spawn(gameObject.transform.position, this.ac.City);
+        ac.Age = 0;
+        ac.Illness = (UnityEngine.Random.value < (this.ac.Illness == true ? 1 : 0) * ic.Infectiousness);
+    }
+
+    public void Pregnant(AgentController other)
     {
         if(Age < 13 || Age >= 50)
         {
@@ -83,20 +90,9 @@ public class AgentBirthController : MonoBehaviour
             probability = 0.12f;
         }
 
-        if(UnityEngine.Random.value < probability && lastBirth == 0)
+        if(UnityEngine.Random.value < probability && pregnancy == 0)
         {
-            /*
-            AgentVariables av = new AgentVariables();
-            AgentVariables otherVariables = other.AgentVariables;
-            av.x = (ac.AgentVariables.x + otherVariables.x) / 2.0f;
-            av.y = (ac.AgentVariables.y + otherVariables.y) / 2.0f;
-            av.gender = UnityEngine.Random.value < 0.5f ? "M" : "F";
-            av.illness = (UnityEngine.Random.value < ic.Infectiousness ? true : false);
-
-            agentSpawner.Spawn(av);
-            */
-
-            lastBirth += birthCooldown;
+            pregnancy += birthCooldown;
         }
     }
 }

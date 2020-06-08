@@ -35,7 +35,6 @@ public class AgentMovementController : MonoBehaviour
         }
         bounds = movementController.Bounds;
 
-        ac = this.gameObject.GetComponent<AgentController>();
         rb = this.gameObject.GetComponent<Rigidbody>();
     }
 

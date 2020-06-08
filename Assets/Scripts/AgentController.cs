@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class AgentController : MonoBehaviour
 {
@@ -14,12 +12,10 @@ public class AgentController : MonoBehaviour
         None
     }
 
-    private AgentMovementController amc = null;
     private AgentBirthController agc = null;
     private AgentTargetController atc = null;
     public void Awake()
     {
-        amc = this.gameObject.GetComponent<AgentMovementController>();
         agc = this.gameObject.GetComponent<AgentBirthController>();
         atc = this.gameObject.GetComponent<AgentTargetController>();
 
@@ -57,15 +53,10 @@ public class AgentController : MonoBehaviour
             }
         }
 
-        if(this.mGender == Gender.Male && other.mGender == Gender.Female)
+        if(this.mGender == Gender.Female && other.mGender == Gender.Male)
         {
-            other.Birth(this);
+            agc.Pregnant(other);
         }
-    }
-
-    public void Birth(AgentController other)
-    {
-        agc.Birth(other);
     }
 
     public void Tick()
