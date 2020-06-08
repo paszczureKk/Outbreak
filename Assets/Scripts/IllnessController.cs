@@ -20,7 +20,7 @@ public class IllnessController : MonoBehaviour
             return;
         }
 
-        Infectiousness = 0.0f;
-        Fatality = 0.0f;
+        Infectiousness = UnityEngine.Random.value * 100;
+        Fatality = UnityEngine.Random.value * 100;
     }
 }

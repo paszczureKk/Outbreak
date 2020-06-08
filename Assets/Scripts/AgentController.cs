@@ -29,28 +29,6 @@ public class AgentController : MonoBehaviour
     public Gender mGender { set; get; }
     public bool Illness { set; get; }
 
-    public AgentVariables AgentVariables
-    {
-        set
-        {
-            amc.Velocity = new Vector2(0.0f, 0.0f);
-            mGender = value.gender == "M" ? Gender.Male : value.gender == "F" ? Gender.Female : Gender.None;
-            Illness = value.illness;
-            MovementController.Instance.Plane = new Vector2(value.x, value.y);
-        }
-        get
-        {
-            AgentVariables av = new AgentVariables();
-            av.x = transform.position.x;
-            av.y = transform.position.z;
-            av.gender = mGender == Gender.Male ? "M" : mGender == Gender.Female ? "F" : "N";
-            av.illness = Illness;
-            av.age = agc.Age;
-
-            return av;
-        }
-    }
-
     public void OnCollisionEnter(Collision collision)
     {
         AgentController other = collision.gameObject.GetComponent<AgentController>();

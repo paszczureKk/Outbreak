@@ -14,6 +14,10 @@ public class AgentSpawner : MonoBehaviour
     [SerializeField]
     private GameObject agentRealm;
 
+    [SerializeField]
+    [Range(0, 100)]
+    private int population;
+
     private List<GameObject> agents;
 
     private WorldController wc;
@@ -41,23 +45,16 @@ public class AgentSpawner : MonoBehaviour
         wc = WorldController.Instance;
         ic = IllnessController.Instance;
 
-        AgentsWrapper agentVariables = JsonUtility.FromJson<AgentsWrapper>(jsonFile.text);
-        ic.Infectiousness = (float)agentVariables.Infectiousness;
-        ic.Fatality = (float)agentVariables.Fatality;
-
-        foreach (AgentVariables variables in agentVariables.agents)
+        for (int i = 0; i < population; i++)
         {
-            Spawn(variables);
+            Spawn();
         }
     }
 
-    public void Spawn(AgentVariables av)
+    public void Spawn()
     {
-        GameObject agent = Instantiate<GameObject>(agent_template, new Vector3(av.x, agent_template.transform.position.y, av.y), Quaternion.identity, agentRealm.transform);
         AgentController ac = agent.GetComponent<AgentController>();
-        ac.AgentVariables = av;
         agents.Add(agent);
-
         wc.KeepTrack(ac);
     }
 }

@@ -8,6 +8,7 @@ public class WorldController : MonoBehaviour
     private List<AgentController> agents;
 
     private int timeframe = 0;
+
     public static int WorldTick { get; set; }
     private int saveCount = 0;
 
@@ -36,15 +37,11 @@ public class WorldController : MonoBehaviour
                 agent.Freeze();
             }
 
-            AgentsWrapper agentVariables = new AgentsWrapper();
-            List<AgentVariables> avs = new List<AgentVariables>();
             foreach (AgentController agent in agents)
             {
-                avs.Add(agent.AgentVariables);
+                agent.Tick();
             }
-            agentVariables.agents = avs.ToArray();
-            string json = JsonUtility.ToJson(agentVariables);
-            System.IO.File.WriteAllText(Application.dataPath + "/Data/data" + ++saveCount + ".json", json);
+
 
             foreach (AgentController agent in agents)
             {

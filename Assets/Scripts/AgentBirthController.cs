@@ -9,7 +9,6 @@ public class AgentBirthController : MonoBehaviour
 
     private static int birthCooldown = 1;
     private int lastBirth = 0;
-    private int timeFrame = 0;
     public int Age { get; set; }
 
     private float DeathProbability
@@ -43,22 +42,19 @@ public class AgentBirthController : MonoBehaviour
     }
 
     // Update is called once per frame
-    public void FixedUpdate()
+    public void Tick()
     {
-        if(++timeFrame == WorldController.WorldTick)
-        {
-            Age++;
+        Age++;
             
-            if(lastBirth > 0)
-            {
-                lastBirth--;
-            }
+        if(lastBirth > 0)
+        {
+            lastBirth--;
+        }
 
-            if (UnityEngine.Random.value < DeathProbability)
-            {
-                wc.DropTrack(ac);
-                Destroy(gameObject);
-            }
+        if (UnityEngine.Random.value < DeathProbability)
+        {
+            wc.DropTrack(ac);
+            Destroy(gameObject);
         }
     }
 
