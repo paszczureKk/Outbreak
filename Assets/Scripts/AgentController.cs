@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class AgentController : MonoBehaviour
 {
+    public City City { set; get; }
+
     private static IllnessController ic;
     public enum Gender
     {
@@ -14,10 +16,12 @@ public class AgentController : MonoBehaviour
 
     private AgentMovementController amc = null;
     private AgentBirthController agc = null;
+    private AgentTargetController atc = null;
     public void Awake()
     {
         amc = this.gameObject.GetComponent<AgentMovementController>();
         agc = this.gameObject.GetComponent<AgentBirthController>();
+        atc = this.gameObject.GetComponent<AgentTargetController>();
 
         setRandomAge();
         setRandomGender();
@@ -64,16 +68,18 @@ public class AgentController : MonoBehaviour
         agc.Birth(other);
     }
 
-    public void Freeze()
+    public void Tick()
     {
-        amc.enabled = false;
-        agc.enabled = false;
-    }
-
-    public void Unfreeze()
-    {
-        amc.enabled = true;
-        agc.enabled = true;
+        if(WorldController.Instance.Day == true)
+        {
+            atc.enabled = false;
+            atc.Work();
+        }
+        else
+        {
+            atc.enabled = true;
+        }
+        agc.Tick();
     }
 
     private void setRandomAge()

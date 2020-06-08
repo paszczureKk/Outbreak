@@ -1,16 +1,20 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class WorldController : MonoBehaviour
 {
     public static WorldController Instance { get; set; }
 
-    private List<AgentController> agents;
+    private List<City> cities;
+
+    [SerializeField]
+    private int citiesNumber;
 
     private int timeframe = 0;
 
     public static int WorldTick { get; set; }
-    private int saveCount = 0;
+    public bool Day { get; set; }
 
     public void Awake()
     {
@@ -25,40 +29,29 @@ public class WorldController : MonoBehaviour
         }
 
         WorldTick = 1000;
-        agents = new List<AgentController>();
+        cities = new List<City>();
     }
     public void FixedUpdate()
     {
-        //Debug.Log(timeframe);
         if(++timeframe == WorldTick)
         {
-            foreach (AgentController agent in agents)
-            {
-                agent.Freeze();
-            }
+            Day = !Day;
 
-            foreach (AgentController agent in agents)
+            foreach (City city in cities)
             {
-                agent.Tick();
-            }
-
-
-            foreach (AgentController agent in agents)
-            {
-                agent.Unfreeze();
+                city.Tick();
             }
 
             timeframe = 0;
-            Debug.Log(agents.Count);
         }
     }
 
-    public void KeepTrack(AgentController agent)
+    public City Town
     {
-        agents.Add(agent);
-    }
-    public void DropTrack(AgentController agent)
-    {
-        agents.Remove(agent);
+        get
+        {
+            var temp = cities.Where(e => e.Access == true).ToList();
+            return (temp.Count == 0 ? null : temp[UnityEngine.Random.Range(0, temp.Count)]);
+        }
     }
 }

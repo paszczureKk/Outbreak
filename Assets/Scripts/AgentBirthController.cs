@@ -53,7 +53,7 @@ public class AgentBirthController : MonoBehaviour
 
         if (UnityEngine.Random.value < DeathProbability)
         {
-            wc.DropTrack(ac);
+            ac.City.DropTrack(ac);
             Destroy(gameObject);
         }
     }
@@ -85,6 +85,7 @@ public class AgentBirthController : MonoBehaviour
 
         if(UnityEngine.Random.value < probability && lastBirth == 0)
         {
+            /*
             AgentVariables av = new AgentVariables();
             AgentVariables otherVariables = other.AgentVariables;
             av.x = (ac.AgentVariables.x + otherVariables.x) / 2.0f;
@@ -93,6 +94,7 @@ public class AgentBirthController : MonoBehaviour
             av.illness = (UnityEngine.Random.value < ic.Infectiousness ? true : false);
 
             agentSpawner.Spawn(av);
+            */
 
             lastBirth += birthCooldown;
         }

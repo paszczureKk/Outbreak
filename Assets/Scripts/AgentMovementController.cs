@@ -1,13 +1,16 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class AgentMovementController : MonoBehaviour
 {
     private static MovementController movementController = null;
     private static Vector2 bounds = Vector2.zero;
-    private static float maxSpeedChange = 0.0f;
+    private static float speed = 0.0f;
 
     private Rigidbody rb;
+    private AgentTargetController atc;
 
+    /*
     private Vector3 currentVelocity = Vector3.zero;
     private Vector3 velocity = Vector3.zero;
     public Vector2 Velocity
@@ -21,22 +24,25 @@ public class AgentMovementController : MonoBehaviour
             return new Vector2(velocity.x, velocity.z);
         }
     }
+    */
 
     public void Start()
     {
         if (movementController == null)
         {
             movementController = MovementController.Instance;
-            maxSpeedChange = movementController.MaxAcceleration * Time.deltaTime;
+            speed = movementController.Speed * Time.deltaTime;
         }
         bounds = movementController.Bounds;
 
+        ac = this.gameObject.GetComponent<AgentController>();
         rb = this.gameObject.GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
     public void FixedUpdate()
     {
+        /*
         currentVelocity.x =
             Mathf.MoveTowards(currentVelocity.x, velocity.x, maxSpeedChange);
         currentVelocity.z =
@@ -68,5 +74,8 @@ public class AgentMovementController : MonoBehaviour
         this.gameObject.transform.localPosition = newPosition;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
+        */
+
+        transform.position = Vector3.MoveTowards(transform.position, atc.Target, speed);
     }
 }

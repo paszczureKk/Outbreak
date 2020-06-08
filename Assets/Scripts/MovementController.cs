@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 public class MovementController : MonoBehaviour
 {
+    public float Epsilon = 0.1f;
+    public float YOffset = 1.5f;
     public static MovementController Instance { get; set; }
     
     public void Awake()
@@ -23,12 +25,12 @@ public class MovementController : MonoBehaviour
 
     [SerializeField]
     [Range(1, 10)]
-    private float maxAcceleration = 5.0f;
-    public float MaxAcceleration
+    private float speed = 5.0f;
+    public float Speed
     {
         get
         {
-            return maxAcceleration;
+            return Speed;
         }
     }
 
@@ -68,7 +70,6 @@ public class MovementController : MonoBehaviour
             if (this.m.z < max)
             {
                 this.m.z = max;
-                Debug.Log(max);
                 this.Scale = Mathf.CeilToInt(max);
             }
         }
