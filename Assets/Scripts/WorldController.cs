@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-
+using System;
 public class WorldController : MonoBehaviour
 {
     public static WorldController Instance { get; set; }
@@ -30,6 +30,7 @@ public class WorldController : MonoBehaviour
 
         WorldTick = 1000;
         cities = new List<City>();
+        CitySpawner();
     }
     public void FixedUpdate()
     {
@@ -52,6 +53,28 @@ public class WorldController : MonoBehaviour
         {
             var temp = cities.Where(e => e.Access == true).ToList();
             return (temp.Count == 0 ? null : temp[UnityEngine.Random.Range(0, temp.Count)]);
+        }
+    }
+
+    public void CitySpawner()
+    {
+        float sizeX = MovementController.Instance.Bounds.x, sizeY = MovementController.Instance.Bounds.y;
+        while (cities.Count < citiesNumber)
+        {
+            float x = UnityEngine.Random.Range(0, sizeX - 1), y = UnityEngine.Random.Range(0, sizeY - 1);
+            bool placeIsFree = true;
+            foreach (City city in cities)
+            {
+                if (Math.Abs(x - city.Coords.X) <= city.Range || Math.Abs(y - city.Coords.Y) <= city.Range)
+                {
+                    placeIsFree = false;
+                    break;
+                }
+            }
+            if (placeIsFree)
+            {
+                cities.Add(new City(x, y));
+            }
         }
     }
 }

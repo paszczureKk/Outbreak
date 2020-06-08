@@ -15,7 +15,11 @@ public class City
     {
         Range = UnityEngine.Random.Range(1, Math.Min(MovementController.Instance.Bounds.x, MovementController.Instance.Bounds.y));
     }
-    
+    public City(float x, float y)
+    {
+        Coords = new Vector2(x, y);
+        Range = UnityEngine.Random.Range(1, Math.Min(MovementController.Instance.Bounds.x, MovementController.Instance.Bounds.y));
+    }
     public void Tick()
     {
         foreach (AgentController agent in agents)
