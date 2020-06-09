@@ -13,25 +13,46 @@ public class AgentController : MonoBehaviour
     }
 
     private AgentBirthController agc = null;
+    private AgentMovementController amc = null;
     private AgentTargetController atc = null;
     public void Awake()
     {
         agc = this.gameObject.GetComponent<AgentBirthController>();
+        amc = this.gameObject.GetComponent<AgentMovementController>();
         atc = this.gameObject.GetComponent<AgentTargetController>();
 
+        ic = IllnessController.Instance;
         setRandomAge();
         setRandomGender();
         setRandomIllnessState();
     }
-    public void Start()
+    public void Run()
     {
-        ic = IllnessController.Instance;
+        atc.PickWork();
+        amc.enabled = true;
     }
 
     public Gender mGender { set; get; }
     public bool Illness { set; get; }
 
-    public int Age { set; get; }
+    private int age = 100;
+    public int Age
+    {
+        set
+        {
+            int temp = age;
+            age = value;
+            if ((temp < 13 && age >= 13) || (temp < 50 && age >= 50))
+            {
+                Debug.Log("yikes");
+                atc.PickWork();
+            }
+        }
+        get
+        {
+            return age;
+        }
+    }
 
     public void OnCollisionEnter(Collision collision)
     {

@@ -2,23 +2,17 @@
 
 public class AgentTargetController : MonoBehaviour
 {
-    private static Vector2 bounds;
     private AgentController ac;
     public Vector3 Target { set; get; }
     private Vector3 work;
 
     private static float epsilon;
-    private static float yOffset;
-
 
     public void Start()
     {
         epsilon = MovementController.Instance.Epsilon * 2;
-        yOffset = MovementController.Instance.YOffset;
-        bounds = MovementController.Instance.Bounds;
         ac = this.gameObject.transform.GetComponent<AgentController>();
-
-        Target = work = PickTarget();
+        PickWork();
         this.enabled = false;
     }
     public void FixedUpdate()
@@ -36,5 +30,14 @@ public class AgentTargetController : MonoBehaviour
     public void Work()
     {
         Target = work;
+    }
+
+    public void PickWork()
+    {
+        if(ac == null)
+        {
+            Debug.Log("yikes");
+        }
+        Target = work = ac.City.Work(ac.Age);
     }
 }

@@ -8,20 +8,36 @@ public class AgentBirthController : MonoBehaviour
     private AgentController ac;
 
     private static int birthCooldown = 1;
-    private int pregnancy = 0;
-    public int Age { get; set; }
+    private int pregnancy;
+    private int Pregnancy
+    {
+        set
+        {
+            if(value > pregnancy)
+            {
+                pregnancy = value;
+            }
+            else if(pregnancy > 0)
+            {
+                pregnancy = value;
+                if(value == 0)
+                {
+                    Birth();
+                }
+            }
+        }
+        get
+        {
+            return pregnancy;
+        }
+    }
 
     private float DeathProbability
     {
         get
         {
-            return Age * 0.005f + 0.02f + (ac.Illness == true ? ic.Fatality : 0.0f);
+            return ac.Age * 0.005f + 0.02f + (ac.Illness == true ? ic.Fatality : 0.0f);
         }
-    }
-
-    public void Awake()
-    {
-        this.Age = 0;
     }
 
     public void Start()
@@ -38,18 +54,14 @@ public class AgentBirthController : MonoBehaviour
         {
             wc = WorldController.Instance;
         }
-        ac = this.gameObject.GetComponent<AgentController>();
+        ac = gameObject.transform.GetComponent<AgentController>();
     }
 
     public void Tick()
     {
-        Age++;
-            
-        if(pregnancy > 0)
-        {
-            pregnancy--;
-            Birth();
-        }
+        ac.Age++;
+
+        Pregnancy--;
 
         if (UnityEngine.Random.value < DeathProbability)
         {
@@ -67,21 +79,25 @@ public class AgentBirthController : MonoBehaviour
 
     public void Pregnant(AgentController other)
     {
-        if(Age < 13 || Age >= 50)
+        if(ac == null)
+        {
+            return;
+        }
+        if(ac.Age < 13 || ac.Age >= 50)
         {
             return;
         }
 
         float probability;
-        if(Age < 20 && Age >= 13)
+        if(ac.Age < 20 && ac.Age >= 13)
         {
             probability = 0.85f;
         }
-        else if(Age < 30 && Age >= 20)
+        else if(ac.Age < 30 && ac.Age >= 20)
         {
             probability = 0.69f;
         }
-        else if(Age < 40 && Age >= 30)
+        else if(ac.Age < 40 && ac.Age >= 30)
         {
             probability = 0.31f;
         }

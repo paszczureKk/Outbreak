@@ -1,27 +1,17 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class AgentSpawner : MonoBehaviour
 {
     public static AgentSpawner Instance { get; set; }
 
     [SerializeField]
-    private TextAsset jsonFile;
-
-    [SerializeField]
     private GameObject agent_template;
-
-    [SerializeField]
-    private GameObject agentRealm;
 
     [SerializeField]
     [Range(0, 100)]
     private int population = 30;
 
-    private List<GameObject> agents;
-
     private WorldController wc;
-    private IllnessController ic;
 
     // Start is called before the first frame update
     public void Awake()
@@ -35,16 +25,11 @@ public class AgentSpawner : MonoBehaviour
             Destroy(this);
             return;
         }
-
-        agentRealm = Instantiate<GameObject>(agentRealm);
-        agents = new List<GameObject>();
     }
 
-    public void Start()
+    public void Spawn()
     {
         wc = WorldController.Instance;
-        ic = IllnessController.Instance;
-
         for (int i = 0; i < population; i++)
         {
             Spawn(Vector3.zero);
@@ -58,7 +43,7 @@ public class AgentSpawner : MonoBehaviour
             city = wc.Town;
         }
 
-        GameObject go = Instantiate(agent_template, pos, Quaternion.identity , city.gameObject.transform);
+        GameObject go = Instantiate(agent_template, pos, Quaternion.identity, wc.AgentRealm);
         AgentController ac = go.transform.GetComponent<AgentController>();
         ac.City = city;
 

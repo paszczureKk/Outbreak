@@ -59,17 +59,4 @@ public class MovementController : MonoBehaviour
 
     [SerializeField]
     private GameObject plane;
-
-    public Vector2 Plane
-    {
-        set
-        {
-            float max = (value.x > value.y ? value.x : value.y);
-            if (this.m.z < max)
-            {
-                this.m.z = max;
-                this.Scale = Mathf.CeilToInt(max);
-            }
-        }
-    }
 }

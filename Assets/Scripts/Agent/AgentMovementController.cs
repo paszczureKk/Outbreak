@@ -31,6 +31,10 @@ public class AgentMovementController : MonoBehaviour
         if (movementController == null)
         {
             movementController = MovementController.Instance;
+            if(movementController == null)
+            {
+                Debug.Log("BRAH");
+            }
             speed = movementController.Speed * Time.deltaTime;
         }
         bounds = movementController.Bounds;
@@ -38,7 +42,6 @@ public class AgentMovementController : MonoBehaviour
         rb = this.gameObject.GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
     public void FixedUpdate()
     {
         /*
