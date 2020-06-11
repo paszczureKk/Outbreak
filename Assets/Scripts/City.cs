@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using UnityEngine;
 
 public class City : MonoBehaviour
@@ -11,9 +13,28 @@ public class City : MonoBehaviour
 
     private List<AgentController> agents;
     private List<AgentController> trash;
+    private List<AgentController> created;
 
     private List<Vector3> works;
-    private List<Vector3> schools;
+    private Vector3 school;
+    private Vector3 shop;
+    private Vector3 hospital;
+    private Vector3 church;
+
+    public AgentController RandomAgent
+    {
+        get
+        {
+            return agents[UnityEngine.Random.Range(0, agents.Count)];
+        }
+    }
+    public int Agents
+    {
+        get
+        {
+            return agents.Count;
+        }
+    }
 
 
     public bool Access { get; set; }
@@ -21,9 +42,11 @@ public class City : MonoBehaviour
     public void Awake()
     {
         works = new List<Vector3>();
-        schools = new List<Vector3>();
+
         agents = new List<AgentController>();
         trash = new List<AgentController>();
+        created = new List<AgentController>();
+        
         Access = true;
 
         if (mc == null)
@@ -34,14 +57,18 @@ public class City : MonoBehaviour
         Range = UnityEngine.Random.Range(0, Math.Min(mc.Bounds.x, mc.Bounds.y));
         this.gameObject.transform.localScale = new Vector3(Range * 0.1f, 1.0f, Range * 0.1f);
 
-        for (int i = 0; i < Mathf.CeilToInt(Range); i++)
-        {
-            works.Add(RandomPos);
-        }
-        for (int i = 0; i < Mathf.Max(1, Mathf.CeilToInt(Range / 4)); i++)
-        {
-            schools.Add(RandomPos);
-        }
+        works.Add(RandomPos);
+
+        school = RandomPos;
+        works.Add(school);
+
+        hospital = RandomPos;
+        works.Add(hospital);
+
+        shop = RandomPos;
+        works.Add(hospital);
+
+        church = RandomPos;
     }
 
     public void Tick()
@@ -54,12 +81,17 @@ public class City : MonoBehaviour
         {
             agents.Remove(item);
         }
+        foreach (AgentController item in created)
+        {
+            agents.Add(item);
+        }
         trash.Clear();
+        created.Clear();
     }
 
     public void KeepTrack(AgentController agent)
     {
-        agents.Add(agent);
+        created.Add(agent);
     }
 
     public void DropTrack(AgentController agent)
@@ -91,7 +123,7 @@ public class City : MonoBehaviour
     {
         if(age < 13)
         {
-            return schools[UnityEngine.Random.Range(0, schools.Count)];
+            return school;
         }
         else if(age < 50)
         {

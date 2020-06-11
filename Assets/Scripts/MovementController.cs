@@ -29,7 +29,7 @@ public class MovementController : MonoBehaviour
     {
         get
         {
-            return Speed;
+            return speed;
         }
     }
 

@@ -1,15 +1,19 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class AgentController : MonoBehaviour
 {
     private static Material sick;
     private static Material healthy;
 
+    private static float TravelProbability = 0.10f;
+
     private MeshRenderer mr;
 
     public City City { set; get; }
 
     private static IllnessController ic;
+    private static WorldController wc;
     public enum Gender
     {
         Male,
@@ -18,8 +22,7 @@ public class AgentController : MonoBehaviour
     }
 
     private AgentBirthController agc = null;
-    private AgentMovementController amc = null;
-    private AgentTargetController atc = null;
+    private List<AgentController> others;
     public void Awake()
     {
         mr = gameObject.transform.GetComponent<MeshRenderer>();
@@ -34,18 +37,20 @@ public class AgentController : MonoBehaviour
         }
 
         agc = this.gameObject.GetComponent<AgentBirthController>();
-        amc = this.gameObject.GetComponent<AgentMovementController>();
-        atc = this.gameObject.GetComponent<AgentTargetController>();
 
-        ic = IllnessController.Instance;
+        if (ic == null)
+        {
+            ic = IllnessController.Instance;
+        }
+        if (wc == null)
+        {
+            wc = WorldController.Instance;
+        }
         setRandomAge();
         setRandomGender();
-        setRandomIllnessState();
-    }
-    public void Run()
-    {
-        atc.PickWork();
-        amc.enabled = true;
+        Illness = false;
+
+        others = new List<AgentController>();
     }
 
     public Gender mGender { set; get; }
@@ -54,14 +59,19 @@ public class AgentController : MonoBehaviour
     {
         set
         {
-            illness = value;
-            if(illness == true)
+            if(value != illness)
             {
-                mr.material = sick;
-            }
-            else
-            {
-                mr.material = healthy;
+                illness = value;
+                if (illness == true)
+                {
+                    wc.Sick++;
+                    mr.material = sick;
+                }
+                else
+                {
+                    wc.Sick--;
+                    mr.material = healthy;
+                }
             }
         }
         get
@@ -70,23 +80,8 @@ public class AgentController : MonoBehaviour
         }
     }
 
-    private int age = 100;
-    public int Age
-    {
-        set
-        {
-            int temp = age;
-            age = value;
-            if ((temp < 13 && age >= 13) || (temp < 50 && age >= 50))
-            {
-                atc.PickWork();
-            }
-        }
-        get
-        {
-            return age;
-        }
-    }
+    private int age = 0;
+    public int Age { set; get; }
 
     public void OnCollisionEnter(Collision collision)
     {
@@ -100,9 +95,20 @@ public class AgentController : MonoBehaviour
             return;
         }
 
+        foreach (AgentController agent in others)
+        {
+            if(agent == other)
+            {
+                return;
+            }
+        }
+
+        others.Add(other);
+
         if(this.Illness || other.Illness)
         {
-            if (UnityEngine.Random.value < ic.Infectiousness)
+            float rand = UnityEngine.Random.value;
+            if (rand < ic.Infectiousness)
             {
                 this.Illness = other.Illness = true;
             }
@@ -125,15 +131,18 @@ public class AgentController : MonoBehaviour
             Illness = true;
         }
 
-        if (WorldController.Instance.Day == true)
+        others.Clear();
+
+        if (UnityEngine.Random.value < TravelProbability)
         {
-            atc.enabled = false;
-            atc.Work();
+            City city = wc.TownTravel(City);
+            
+            if(city != null)
+            {
+                City = city;
+            }
         }
-        else
-        {
-            atc.enabled = true;
-        }
+
         agc.Tick();
     }
 
@@ -175,19 +184,6 @@ public class AgentController : MonoBehaviour
         else
         {
             mGender = Gender.Female;
-        }
-    }
-
-    private void setRandomIllnessState()
-    {
-        float rand_illness = UnityEngine.Random.value;
-        if (rand_illness < ic.InitialIllnessProbability)
-        {
-            Illness = true;
-        }
-        else
-        {
-            Illness = false;
         }
     }
 }

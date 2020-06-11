@@ -2,6 +2,8 @@
 using System.Linq;
 using UnityEngine;
 using System;
+using UnityEngine.UI;
+
 public class WorldController : MonoBehaviour
 {
     public static WorldController Instance { get; set; }
@@ -44,10 +46,17 @@ public class WorldController : MonoBehaviour
         }
     }
 
+    private int tickcount = 0;
+    [SerializeField]
+    private Text TickCount;
+
+    [SerializeField]
+    private Text AgentStatus;
+
+
     private int timeframe = 0;
 
     public static int WorldTick { get; set; }
-    public bool Day { get; set; }
 
     public void Awake()
     {
@@ -65,8 +74,6 @@ public class WorldController : MonoBehaviour
         cities = new List<City>();
 
         agentRealm = Instantiate<GameObject>(agentRealm);
-
-        Day = true;
     }
     public void Start()
     {
@@ -75,21 +82,42 @@ public class WorldController : MonoBehaviour
 
         CitySpawner();
         AgentSpawner.Instance.Spawn();
+        Tick();
+        cities[UnityEngine.Random.Range(0, cities.Count)].RandomAgent.Illness = true;
     }
 
     public void FixedUpdate()
     {
         if(++timeframe == WorldTick)
         {
-            Day = !Day;
-
-            foreach (City city in cities)
-            {
-                city.Tick();
-            }
-
-            timeframe = 0;
+            Tick();
         }
+        LabelUpdate();
+    }
+
+    private int agents;
+
+    private void Tick()
+    {
+        tickcount++;
+
+        agents = 0;
+
+        foreach (City city in cities)
+        {
+            city.Tick();
+            agents += city.Agents;
+        }
+
+        timeframe = 0;
+    }
+
+    public int Sick { set; get; }
+
+    private void LabelUpdate()
+    {
+        TickCount.text = "World Tick: " + tickcount.ToString();
+        AgentStatus.text = "Agents sick: " + Sick.ToString() + "/" + agents.ToString();
     }
 
     public City TownTravel(City city)
@@ -127,36 +155,5 @@ public class WorldController : MonoBehaviour
 
             cities.Add(city);
         }
-        /*
-        float sizeX = mc.Bounds.x, sizeY = mc.Bounds.y;
-        while (cities.Count < citiesNumber)
-        {
-            Vector2 coords = new Vector2(UnityEngine.Random.Range(0, sizeX - 1), UnityEngine.Random.Range(0, sizeY - 1));
-            bool placeIsFree = true;
-            foreach (City city in cities)
-            {
-                if (Math.Abs(coords.x - city.Coords.x) <= city.Range || Math.Abs(coords.y - city.Coords.y) <= city.Range)
-                {
-                    placeIsFree = false;
-                    break;
-                }
-            }
-            if (placeIsFree)
-            {
-                GameObject go = Instantiate(
-                    city_template,
-                    new Vector3(coords.x, city_template.transform.position.y, coords.y),
-                    Quaternion.identity,
-                    agentRealm.transform);
-
-                City city = go.transform.GetComponent<City>();
-                city.Coords = coords;
-
-                Material material = new Material(material_template);
-                material.color = UnityEngine.Random.ColorHSV();
-
-                cities.Add(city);
-            }
-        }*/
     }
 }

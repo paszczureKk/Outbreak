@@ -31,11 +31,11 @@ public class AgentMovementController : MonoBehaviour
         if (movementController == null)
         {
             movementController = MovementController.Instance;
-            if(movementController == null)
-            {
-                Debug.Log("BRAH");
-            }
             speed = movementController.Speed * Time.deltaTime;
+        }
+        if(atc == null)
+        {
+            atc = transform.GetComponent<AgentTargetController>();
         }
         bounds = movementController.Bounds;
 

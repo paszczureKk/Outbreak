@@ -61,7 +61,7 @@ public class AgentBirthController : MonoBehaviour
     {
         ac.Age++;
 
-        Pregnancy--;
+        //Pregnancy--;
 
         if (UnityEngine.Random.value < DeathProbability)
         {
