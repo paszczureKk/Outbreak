@@ -2,6 +2,11 @@
 
 public class AgentController : MonoBehaviour
 {
+    private static Material sick;
+    private static Material healthy;
+
+    private MeshRenderer mr;
+
     public City City { set; get; }
 
     private static IllnessController ic;
@@ -17,6 +22,17 @@ public class AgentController : MonoBehaviour
     private AgentTargetController atc = null;
     public void Awake()
     {
+        mr = gameObject.transform.GetComponent<MeshRenderer>();
+        if (healthy == null)
+        {
+            healthy = mr.material;
+        }
+        if (sick == null)
+        {
+            sick = new Material(mr.material);
+            sick.color = Color.red;
+        }
+
         agc = this.gameObject.GetComponent<AgentBirthController>();
         amc = this.gameObject.GetComponent<AgentMovementController>();
         atc = this.gameObject.GetComponent<AgentTargetController>();
@@ -33,7 +49,26 @@ public class AgentController : MonoBehaviour
     }
 
     public Gender mGender { set; get; }
-    public bool Illness { set; get; }
+    private bool illness;
+    public bool Illness
+    {
+        set
+        {
+            illness = value;
+            if(illness == true)
+            {
+                mr.material = sick;
+            }
+            else
+            {
+                mr.material = healthy;
+            }
+        }
+        get
+        {
+            return illness;
+        }
+    }
 
     private int age = 100;
     public int Age
@@ -44,7 +79,6 @@ public class AgentController : MonoBehaviour
             age = value;
             if ((temp < 13 && age >= 13) || (temp < 50 && age >= 50))
             {
-                Debug.Log("yikes");
                 atc.PickWork();
             }
         }
@@ -82,7 +116,16 @@ public class AgentController : MonoBehaviour
 
     public void Tick()
     {
-        if(WorldController.Instance.Day == true)
+        if (UnityEngine.Random.value < IllnessController.Instance.Recovery)
+        {
+            Illness = false;
+        }
+        else if (UnityEngine.Random.value < IllnessController.Instance.IllnessProbability)
+        {
+            Illness = true;
+        }
+
+        if (WorldController.Instance.Day == true)
         {
             atc.enabled = false;
             atc.Work();
