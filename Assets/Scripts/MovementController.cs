@@ -33,6 +33,20 @@ public class MovementController : MonoBehaviour
         }
     }
 
+    [SerializeField]
+    private float travelProbability = 0.10f;
+    public float TravelProbability
+    {
+        get
+        {
+            return travelProbability;
+        }
+        set
+        {
+            travelProbability = value;
+        }
+    }
+
     private Vector3 m = Vector3.zero;
 
     private const float planeRatio = 0.1f;

@@ -61,12 +61,16 @@ public class AgentBirthController : MonoBehaviour
     {
         ac.Age++;
 
-        //Pregnancy--;
+        Pregnancy--;
 
         if (UnityEngine.Random.value < DeathProbability)
         {
+            if(this == null)
+            {
+                return;
+            }
             ac.City.DropTrack(ac);
-            Destroy(gameObject);
+            wc.Clear(gameObject);
         }
     }
 

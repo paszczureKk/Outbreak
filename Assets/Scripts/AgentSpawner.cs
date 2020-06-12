@@ -7,9 +7,7 @@ public class AgentSpawner : MonoBehaviour
     [SerializeField]
     private GameObject agent_template;
 
-    [SerializeField]
-    [Range(0, 100)]
-    private int population = 30;
+    private int spawnerCounter = 0;
 
     private WorldController wc;
 
@@ -30,7 +28,7 @@ public class AgentSpawner : MonoBehaviour
     public void Spawn()
     {
         wc = WorldController.Instance;
-        for (int i = 0; i < population; i++)
+        for (int i = 0; i < VariablesController.Instance.AgentsNumber; i++)
         {
             Spawn(Vector3.zero);
         }
@@ -44,6 +42,7 @@ public class AgentSpawner : MonoBehaviour
         }
 
         GameObject go = Instantiate(agent_template, pos, Quaternion.identity, wc.AgentRealm);
+        go.name = "Agent" + spawnerCounter++.ToString();
         AgentController ac = go.transform.GetComponent<AgentController>();
         ac.City = city;
 

@@ -6,20 +6,22 @@ using UnityEngine;
 
 public class City : MonoBehaviour
 {
+    public static float MaxRange;
     public float Range { set; get; }
     public Vector2 Coords { set; get; }
 
     private static MovementController mc;
+    private static ResearchController rc;
 
     private List<AgentController> agents;
     private List<AgentController> trash;
     private List<AgentController> created;
 
     private List<Vector3> works;
-    private Vector3 school;
-    private Vector3 shop;
-    private Vector3 hospital;
-    private Vector3 church;
+    public Vector3 School;
+    public Vector3 Shop;
+    public Vector3 Hospital;
+    public Vector3 Church;
 
     public AgentController RandomAgent
     {
@@ -33,6 +35,35 @@ public class City : MonoBehaviour
         get
         {
             return agents.Count;
+        }
+    }
+    public int SickAgents
+    {
+        get
+        {
+            if (Agents == 0)
+            {
+                return 0;
+            }
+
+            int count = agents.Where(e => e.Illness == true).ToList().Count;
+
+            if (Access == true)
+            {
+                if (count / Agents > rc.AlertLevel)
+                {
+                    rc.Alert(this);
+                }
+            }
+            else
+            {
+                if (count / Agents < rc.CuredLevel)
+                {
+                    rc.Cured(this);
+                }
+            }
+
+            return count;
         }
     }
 
@@ -53,33 +84,40 @@ public class City : MonoBehaviour
         {
             mc = MovementController.Instance;
         }
+        if (rc == null)
+        {
+            rc = ResearchController.Instance;
+        }
 
-        Range = UnityEngine.Random.Range(0, Math.Min(mc.Bounds.x, mc.Bounds.y));
+        Range = UnityEngine.Random.Range(0, MaxRange);
         this.gameObject.transform.localScale = new Vector3(Range * 0.1f, 1.0f, Range * 0.1f);
 
         works.Add(RandomPos);
 
-        school = RandomPos;
-        works.Add(school);
+        School = RandomPos;
+        works.Add(School);
 
-        hospital = RandomPos;
-        works.Add(hospital);
+        Hospital = RandomPos;
+        works.Add(Hospital);
 
-        shop = RandomPos;
-        works.Add(hospital);
+        Shop = RandomPos;
+        works.Add(Shop);
 
-        church = RandomPos;
+        Church = RandomPos;
     }
 
     public void Tick()
     {
+        agents = agents.Where(e => e != null).ToList();
         foreach (AgentController agent in agents)
         {
             agent.Tick();
         }
-        foreach (AgentController item in trash)
+        for (int i = 0; i < trash.Count; i++)
         {
-            agents.Remove(item);
+            if (trash[i] == null)
+                continue;
+            Destroy(trash[i].gameObject);
         }
         foreach (AgentController item in created)
         {
@@ -123,7 +161,7 @@ public class City : MonoBehaviour
     {
         if(age < 13)
         {
-            return school;
+            return School;
         }
         else if(age < 50)
         {

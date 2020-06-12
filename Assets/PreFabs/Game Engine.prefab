@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1754950057691987362}
   - component: {fileID: 6060798607321140594}
   - component: {fileID: 8508177371300041222}
+  - component: {fileID: 6454123171378802351}
   m_Layer: 0
   m_Name: Game Engine
   m_TagString: Untagged
@@ -49,6 +50,7 @@ MonoBehaviour:
   Epsilon: 0.1
   YOffset: 1.5
   speed: 5
+  travelProbability: 0.1
   plane: {fileID: 8953779127818037631, guid: aa37f1ecbcd2840409578f921ac02855, type: 3}
 --- !u!114 &1754950057691987362
 MonoBehaviour:
@@ -77,6 +79,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b5971cfe42d7e84cbe3b10478d6d7e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  infectiousness: 0.15
+  mortality: 0.05
+  illnessProbability: 0.03
+  recoveryProbability: 0.1
+  mutationProbability: 0.1
 --- !u!114 &8508177371300041222
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -89,10 +96,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6aec366b00409ce40b642573ad114401, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  worldTick: 300
   citiesNumber: 10
+  cityRange: 7
   city_template: {fileID: 8762831634492198124, guid: 720cde0ba1384684d922b362b1827a81,
     type: 3}
   agentRealm: {fileID: 5956227950033479748, guid: b084c2c722417c641a9f1f82bffdb57e,
     type: 3}
   material_template: {fileID: 2100000, guid: d3028c5e273d2764abf1a6573bb86187, type: 2}
   mapScale: 30
+  TickCount: {fileID: 0}
+  AgentStatus: {fileID: 0}
+  CureStatus: {fileID: 0}
+--- !u!114 &6454123171378802351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1754950057691987391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc47d5387747fb648a0433216e8b0d04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cure: 0
+  curedLevel: 0.1
+  tardiness: 0.1
+  alertLevel: 0.8

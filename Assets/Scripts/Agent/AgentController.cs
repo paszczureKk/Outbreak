@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 
 public class AgentController : MonoBehaviour
@@ -6,14 +7,13 @@ public class AgentController : MonoBehaviour
     private static Material sick;
     private static Material healthy;
 
-    private static float TravelProbability = 0.10f;
-
     private MeshRenderer mr;
 
     public City City { set; get; }
 
     private static IllnessController ic;
     private static WorldController wc;
+    private static MovementController mc;
     public enum Gender
     {
         Male,
@@ -22,6 +22,7 @@ public class AgentController : MonoBehaviour
     }
 
     private AgentBirthController agc = null;
+    private AgentTargetController atc = null;
     private List<AgentController> others;
     public void Awake()
     {
@@ -37,6 +38,7 @@ public class AgentController : MonoBehaviour
         }
 
         agc = this.gameObject.GetComponent<AgentBirthController>();
+        atc = this.gameObject.GetComponent<AgentTargetController>();
 
         if (ic == null)
         {
@@ -45,6 +47,10 @@ public class AgentController : MonoBehaviour
         if (wc == null)
         {
             wc = WorldController.Instance;
+        }
+        if (mc == null)
+        {
+            mc = MovementController.Instance;
         }
         setRandomAge();
         setRandomGender();
@@ -64,12 +70,10 @@ public class AgentController : MonoBehaviour
                 illness = value;
                 if (illness == true)
                 {
-                    wc.Sick++;
                     mr.material = sick;
                 }
                 else
                 {
-                    wc.Sick--;
                     mr.material = healthy;
                 }
             }
@@ -81,7 +85,24 @@ public class AgentController : MonoBehaviour
     }
 
     private int age = 0;
-    public int Age { set; get; }
+    public int Age
+    {
+        set
+        {
+            age = value;
+
+            if (age == 13)
+            {
+                atc.PickWork();
+            }
+            else if (age == 50)
+            {
+                atc.PickWork();
+            }
+
+        }
+        get { return age; }
+    }
 
     public void OnCollisionEnter(Collision collision)
     {
@@ -133,7 +154,7 @@ public class AgentController : MonoBehaviour
 
         others.Clear();
 
-        if (UnityEngine.Random.value < TravelProbability)
+        if (City.Access == true && UnityEngine.Random.value < mc.TravelProbability)
         {
             City city = wc.TownTravel(City);
             
@@ -141,6 +162,7 @@ public class AgentController : MonoBehaviour
             {
                 City = city;
             }
+            atc.PickWork();
         }
 
         agc.Tick();
